@@ -11,3 +11,9 @@ export default defineComponent({
   components: {MainPage},
 });
 </script>
+
+<style>
+body {
+  @apply text-neutral-200;
+}
+</style>
