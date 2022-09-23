@@ -1,7 +1,7 @@
 <template>
   <div class="m-6">
-    <h2 class="text-gray-900 mb-6">Заказать звонок</h2>
-    <form class="text-gray-700 grid gap-5 grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
+    <h2 class="text-xl text-gray-900 mb-6">Заказать звонок</h2>
+    <form @submit.prevent="closeForm" class="text-gray-700 grid gap-5 grid-cols-1 sm:grid-cols-3 lg:grid-cols-4">
       <label class="input-el">
         Имя*
         <input v-model="name" class="input" required type="text" name="name" placeholder="Иван Иванов"/>
@@ -17,7 +17,7 @@
       <label class="input-el sm:col-span-2 lg:col-span-1">
         Город*
         <select v-model="city" class="input flex-grow" required>
-          <option v-for="option in options" :key="option.id">
+          <option v-for="option in options" :key="option.id" :value="option.id">
             {{ option.name }}
           </option>
         </select>
@@ -36,10 +36,11 @@ export default defineComponent({
   components: {MyButton},
   props: {
     chosenCity: {
-      type: String,
-      default: ''
+      type: Number,
+      default: 0
     }
   },
+  emits: ['hide-popup'],
   data() {
     return {
       telLength: 10,
@@ -80,6 +81,15 @@ export default defineComponent({
       if (key.length === 1 && key >= '0' && key <='9' && this.tel.length < this.telLength) {
         this.tel.push(key);
       }
+    },
+    closeForm() {
+      this.$store.dispatch('submitForm', {
+        name: this.name,
+        phone: '+7' + this.tel.join(''),
+        email: this.email,
+        city_id: this.city
+      })
+      this.$emit('hide-popup')
     }
   }
 });
